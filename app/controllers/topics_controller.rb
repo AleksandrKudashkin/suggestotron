@@ -1,5 +1,6 @@
 class TopicsController < ApplicationController
   before_action :set_topic, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /topics
   # GET /topics.json
@@ -63,13 +64,14 @@ class TopicsController < ApplicationController
 
   def upvote
     @topic = Topic.find(params[:id])
-    @topic.upvote
+    @topic.upvote(current_user)
     redirect_to(topics_path)
   end
 
   def downvote
     @topic = Topic.find(params[:id])
-    @topic.downvote
+    vote = @topic.votes.find_by(user_id: current_user.id)
+    vote.destroy if vote
     redirect_to(topics_path)
   end
 
