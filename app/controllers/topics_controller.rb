@@ -64,11 +64,17 @@ class TopicsController < ApplicationController
 
   def upvote
     @topic = Topic.find(params[:id])
-    @topic.upvote(current_user)
+    @topic.set_vote(current_user, 1)
     redirect_to(topics_path)
   end
 
   def downvote
+    @topic = Topic.find(params[:id])
+    @topic.set_vote(current_user, -1)
+    redirect_to(topics_path)
+  end
+
+  def cancelvote
     @topic = Topic.find(params[:id])
     vote = @topic.votes.find_by(user_id: current_user.id)
     vote.destroy if vote

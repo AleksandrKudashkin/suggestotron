@@ -1,11 +1,11 @@
 class Topic < ApplicationRecord
   has_many :votes, dependent: :destroy
 
-  def upvote(user)
-    votes.create(user: user)
+  def set_vote(user, value)
+    votes.create(user: user, value: value)
   end
 
-  def downvote
-    votes.take.destroy
+  def votes_count 
+    votes.sum(:value)
   end
 end
